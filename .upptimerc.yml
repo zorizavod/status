@@ -49,6 +49,59 @@ status-website:
     работать. Если у вас что-то не открывается, а здесь всё зелёное — скорее
     всего, дело в вашей сети или у провайдера. Напишите нам на
     svetlana@zolotenkov.ru, разберёмся.
+  css: |
+    /* ZOL-11722. На телефоне содержимое шапки было втрое шире экрана: заголовок
+       обрезался, ссылки «Сайт» и «Справка» были недостижимы. А декоративная
+       зелёная диагональ карточки накрывала значения доступности и времени
+       ответа. Ниже 640 px шапка переносится, диагональ убирается.
+       Правила идут с !important: они перекрывают собственные стили Svelte,
+       у которых специфичность выше за счёт хеш-класса компонента. */
+    @media (max-width: 640px) {
+      nav {
+        white-space: normal !important;
+        overflow-x: visible !important;
+        padding: 0 !important;
+      }
+      nav .container {
+        flex-wrap: wrap !important;
+        justify-content: center !important;
+        padding: 0 1rem !important;
+      }
+      nav .logo {
+        float: none !important;
+        margin-right: 0 !important;
+        padding: 0.75rem 0 !important;
+      }
+      nav .logo img {
+        height: 2rem !important;
+        margin-right: 0.6rem !important;
+      }
+      nav .logo div {
+        white-space: normal !important;
+      }
+      nav ul {
+        width: 100% !important;
+        flex-wrap: wrap !important;
+        justify-content: center !important;
+      }
+      nav ul a {
+        padding: 0.6rem 1rem !important;
+      }
+      .live-status article.graph {
+        background-image: none !important;
+      }
+      .f {
+        flex-wrap: wrap !important;
+      }
+      form.r {
+        justify-content: flex-start !important;
+        width: 100% !important;
+      }
+      form.r label {
+        margin-left: 0 !important;
+        margin-right: 1.1rem !important;
+      }
+    }
   navbar:
     - title: Доступность
       href: /
@@ -75,7 +128,7 @@ i18n:
   pastIncidents: Прошедшие аварии
   pastIncidentsResolved: Устранена за $MINUTES мин, сообщений — $POSTS
   liveStatus: Состояние сейчас
-  overallUptime: "Доступность за всё время: $UPTIME"
+  overallUptime: "Доступность: $UPTIME"
   overallUptimeTitle: Доступность за всё время
   averageResponseTime: "Среднее время ответа: $TIME мс"
   averageResponseTimeTitle: Среднее время ответа
