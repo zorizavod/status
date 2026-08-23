@@ -1,31 +1,111 @@
-# Change these first
-owner: upptime # Your GitHub organization or username, where this repository lives
-repo: upptime # The name of this repository
+# Публичная страница доступности сервисов Zolotenkov — ZOL-11682.
+#
+# Проверки выполняет расписание GitHub Actions, страницу отдаёт GitHub Pages.
+# Ни то, ни другое не стоит на нашем прод-узле: страница обязана пережить ту
+# самую аварию, ради которой её и завели.
+owner: zorizavod
+repo: status
 
 sites:
-  - name: Google
-    url: https://www.google.com
-  - name: Wikipedia
-    url: https://en.wikipedia.org
-  - name: Hacker News
-    url: https://news.ycombinator.com
-  - name: Secret Site
-    url: $SECRET_SITE
+  - name: Рабочее место MRP
+    url: https://mrp.zolotenkov.ru/
+    maxResponseTime: 3000
+  - name: Серверная часть
+    url: https://mrp.zolotenkov.ru/api/health
+    __dangerous__body_down_if_text_missing: '"status":"UP"'
+    maxResponseTime: 2000
+  - name: База данных
+    url: https://mrp.zolotenkov.ru/api/health
+    slug: database
+    __dangerous__body_down_if_text_missing: '"database":"UP"'
+    maxResponseTime: 2000
+  - name: Сайт
+    url: https://zolotenkov.ru/
+    maxResponseTime: 3000
+  - name: Справка
+    url: https://support.zolotenkov.ru/
+    maxResponseTime: 3000
 
 status-website:
-  # Add your custom domain name, or remove the `cname` line if you don't have a domain
-  # Uncomment the `baseUrl` line if you don't have a custom domain and add your repo name there
-  cname: demo.upptime.js.org
-  # baseUrl: /your-repo-name
-  logoUrl: https://raw.githubusercontent.com/upptime/upptime.js.org/master/static/img/icon.svg
-  name: Upptime
-  introTitle: "**Upptime** is the open-source uptime monitor and status page, powered entirely by GitHub."
-  introMessage: This is a sample status page which uses **real-time** data from our [GitHub repository](https://github.com/upptime/upptime). No server required — just GitHub Actions, Issues, and Pages. [**Get your own for free**](https://github.com/upptime/upptime)
+  cname: status.zolotenkov.ru
+  name: Доступность Zolotenkov
+  logoUrl: https://zolotenkov.ru/logo.svg
+  favicon: https://zolotenkov.ru/favicon.ico
+  theme: light
+  introTitle: Доступность сервисов Zolotenkov
+  introMessage: >-
+    Здесь видно, работают ли прямо сейчас рабочее место MRP, сайт и справка.
+    Проверка идёт снаружи, каждые пять минут, с площадки, не связанной с нашими
+    серверами, — если ляжем мы, эта страница останется на связи.
+    Если у вас что-то не открывается, а здесь всё зелёное, напишите нам:
+    скорее всего, дело в вашей сети или у вашего провайдера.
   navbar:
-    - title: Status
+    - title: Доступность
       href: /
-    - title: GitHub
-      href: https://github.com/$OWNER/$REPO
+    - title: Сайт
+      href: https://zolotenkov.ru/
+    - title: Справка
+      href: https://support.zolotenkov.ru/
 
-# Upptime also supports notifications, assigning issues, and more
-# See https://upptime.js.org/docs/configuration
+i18n:
+  locale: ru-RU
+  activeIncidents: Идут аварии
+  allSystemsOperational: Все сервисы работают
+  incidentReport: "Авария №$NUMBER, подробности →"
+  activeIncidentSummary: Началась $DATE, сообщений — $POSTS
+  incidentTitle: Авария №$NUMBER, подробности
+  incidentDetails: Что известно об аварии
+  incidentFixed: Устранена
+  incidentOngoing: Идёт сейчас
+  incidentOpenedAt: Началась
+  incidentClosedAt: Устранена
+  incidentViewOnGitHub: Открыть и подписаться на обновления в GitHub
+  incidentCommentSummary: $DATE, автор — $AUTHOR
+  incidentBack: ← Ко всем авариям
+  pastIncidents: Прошедшие аварии
+  pastIncidentsResolved: Устранена за $MINUTES мин, сообщений — $POSTS
+  liveStatus: Состояние сейчас
+  overallUptime: "Доступность за всё время: $UPTIME"
+  overallUptimeTitle: Доступность за всё время
+  averageResponseTime: "Среднее время ответа: $TIME мс"
+  averageResponseTimeTitle: Среднее время ответа
+  sevelDayResponseTime: Время ответа за 7 дней
+  responseTimeMs: Время ответа, мс
+  up: Работает
+  down: Не работает
+  degraded: Работает медленно
+  ms: мс
+  loading: Загружаем
+  navGitHub: GitHub
+  footer: Эта страница [открыта целиком]($REPO) и собрана на [Upptime](https://upptime.js.org). Проверки идут вне нашей инфраструктуры каждые пять минут.
+  rateLimitExceededTitle: Слишком много запросов
+  rateLimitExceededIntro: Вы исчерпали число запросов, которое можно сделать за час, и страница временно недоступна. Подождите час или добавьте личный токен GitHub.
+  rateLimitExceededWhatDoesErrorMean: Что это значит?
+  rateLimitExceededErrorMeaning: Страница берёт данные о состоянии сервисов через API GitHub. По умолчанию GitHub разрешает 60 запросов в час с одного адреса, и этот запас исчерпан.
+  rateLimitExceededErrorHowCanFix: Как это исправить?
+  rateLimitExceededErrorFix: Подождите час — запас восстановится сам. Либо добавьте личный токен GitHub, он поднимает предел до 5000 запросов в час.
+  rateLimitExceededGeneratePAT: Как создать личный токен GitHub
+  rateLimitExceededHasSet: Личный токен сохранён.
+  rateLimitExceededRemoveToken: Удалить токен
+  rateLimitExceededGitHubPAT: Личный токен GitHub
+  rateLimitExceededCopyPastePAT: Вставьте сюда свой токен
+  rateLimitExceededSaveToken: Сохранить токен
+  errorTitle: Что-то пошло не так
+  errorIntro: Не удалось получить свежие данные о состоянии сервисов.
+  errorText: Попробуйте обновить страницу через минуту.
+  errorHome: На главную
+  pastScheduledMaintenance: Прошедшие плановые работы
+  scheduledMaintenance: Плановые работы
+  scheduledMaintenanceSummaryStarted: Начались $DATE, продлятся $DURATION мин
+  scheduledMaintenanceSummaryStarts: Начнутся $DATE, продлятся $DURATION мин
+  startedAt: Начались
+  startsAt: Начнутся
+  duration: Длительность
+  durationMin: $DURATION мин
+  incidentCompleted: Завершены
+  incidentScheduled: Запланированы
+  duration24H: сутки
+  duration7D: 7 дней
+  duration30D: 30 дней
+  duration1Y: год
+  durationAll: всё время
