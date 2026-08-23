@@ -136,7 +136,7 @@ export function incidentTitle(kind, slug) {
 }
 
 /** §4 и §5 документа. */
-export function incidentBody(kind, slug, startedAt) {
+export function incidentBody(kind, slug, startedAt, markerKind) {
   const time = formatMoscowTime(startedAt);
   const service = servicePhrase(slug, kind);
   const text =
@@ -153,7 +153,7 @@ export function incidentBody(kind, slug, startedAt) {
           "Следующее сообщение появится здесь же, на этой странице, когда сервис заработает, — обычно в течение часа после восстановления, потому что проверка идёт снаружи и несколько раз в час. Обновлять страницу вручную не нужно, автоматических уведомлений мы не рассылаем — следите за этой страницей.",
           "Если работа стоит и это срочно, напишите на svetlana@zolotenkov.ru — ответим и подскажем, чем заменить сервис на время сбоя.",
         ];
-  return `${text.join("\n\n")}\n\n${marker(kind, slug)}`;
+  return `${text.join("\n\n")}\n\n${marker(markerKind || kind, slug)}`;
 }
 
 /** §6 документа: промежуточное сообщение, раз в час при сбое дольше часа. */
@@ -211,6 +211,11 @@ const SLUG_SKIP = new Set(["status", "maintenance", KIND_LABELS.down, KIND_LABEL
 
 export function detectSlug(labels = []) {
   return labels.find((l) => !SLUG_SKIP.has(l)) || "";
+}
+
+/** Первое сообщение, которое мы дублируем комментарием: тело страница не выводит. */
+export function isOpeningComment(body = "") {
+  return (body || "").includes(`${MARKER_PREFIX} kind=opening`);
 }
 
 /** Комментарий, который Upptime пишет при восстановлении. */

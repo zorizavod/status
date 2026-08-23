@@ -18,6 +18,7 @@ import {
   incidentBody,
   incidentTitle,
   isKnownSlug,
+  isOpeningComment,
   isResolvedComment,
   KIND_LABELS,
   resolvedComment,
@@ -60,8 +61,13 @@ for (const issue of issues) {
     `/repos/${owner}/${repo}/issues/${issue.number}/comments?per_page=100`
   );
   const staleResolved = comments.filter((c) => isResolvedComment(c.body) && !hasMarker(c.body));
+  // Страница аварии показывает только сообщения записи, тело она не выводит
+  // вовсе: покупатель, открывший аварию, увидел бы один заголовок. Поэтому
+  // первое сообщение дублируем комментарием — в теле оно остаётся для тех, кто
+  // читает запись на GitHub.
+  const needsOpening = !comments.some((c) => isOpeningComment(c.body));
 
-  if (!needsLabel && !needsRewrite && staleResolved.length === 0) continue;
+  if (!needsLabel && !needsRewrite && !needsOpening && staleResolved.length === 0) continue;
 
   if (needsLabel) {
     // Чем была авария, помним меткой: заголовок мы переписываем по-русски, и
@@ -79,6 +85,13 @@ for (const issue of issues) {
         body: incidentBody(kind, slug, startedAt),
       });
       console.log(`#${issue.number}: переписаны заголовок и тело (${kind}/${slug || "?"})`);
+      changed++;
+    }
+    if (needsOpening) {
+      await api("POST", `/repos/${owner}/${repo}/issues/${issue.number}/comments`, {
+        body: incidentBody(kind, slug, startedAt, "opening"),
+      });
+      console.log(`#${issue.number}: опубликовано первое сообщение (${kind}/${slug || "?"})`);
       changed++;
     }
     for (const comment of staleResolved) {

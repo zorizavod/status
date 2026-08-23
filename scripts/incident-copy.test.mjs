@@ -11,6 +11,7 @@ import {
   incidentBody,
   incidentTitle,
   interimComment,
+  isOpeningComment,
   isResolvedComment,
   KIND_LABELS,
   resolvedComment,
@@ -127,4 +128,13 @@ test("в текстах нет внутренних имён, кодов и сл
       );
     }
   }
+});
+
+test("первое сообщение помечается маркером opening и узнаётся", () => {
+  const body = incidentBody("down", "mrp", started, "opening");
+  assert.ok(isOpeningComment(body));
+  assert.ok(!isOpeningComment(incidentBody("down", "mrp", started)));
+  // Разновидность аварии из такого маркера читать нельзя — она берётся из тела
+  // записи и из метки.
+  assert.equal(detectKind({ labels: ["status", "mrp", KIND_LABELS.down], body, title: "" }), "down");
 });
