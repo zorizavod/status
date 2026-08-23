@@ -1,0 +1,46 @@
+# Тексты аварий для покупателя — ZOL-11734.
+#
+# Этот файл написан нами и НЕ перезаписывается обновлением шаблона Upptime:
+# `update-template` удаляет только свои восемь файлов (graphs, response-time,
+# setup, site, summary, update-template, updates, uptime).
+#
+# Записи об авариях заводит Upptime токеном GITHUB_TOKEN, а события от этого
+# токена намеренно не запускают другие рабочие процессы — поэтому мы цепляемся
+# за окончание прогона «Uptime CI», а не за событие `issues`.
+name: Тексты аварий
+
+on:
+  workflow_run:
+    workflows: ["Uptime CI"]
+    types: [completed]
+  workflow_dispatch:
+  push:
+    paths:
+      - "scripts/**"
+      - ".github/workflows/incident-copy.yml"
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: ${{ github.repository }}-incident-copy
+  cancel-in-progress: false
+
+jobs:
+  copy:
+    name: Привести записи к согласованному тексту
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Проверить тексты
+        run: node --test scripts/incident-copy.test.mjs
+      - name: Переписать записи об авариях
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: node scripts/normalize-incidents.mjs

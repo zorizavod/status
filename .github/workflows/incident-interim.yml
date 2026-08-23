@@ -1,0 +1,34 @@
+# Промежуточное сообщение «Всё ещё чиним» — ZOL-11734, §6 документа с текстами.
+#
+# Правило ГенДира: при сбое дольше часа Дежурный пишет это сообщение и
+# повторяет раз в час до восстановления. Запись закрыта для комментариев,
+# скрипт снимает замок на время записи и ставит обратно.
+name: Промежуточное сообщение об аварии
+
+on:
+  workflow_dispatch:
+    inputs:
+      issue:
+        description: Номер записи об аварии (виден в адресе страницы аварии)
+        required: true
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  interim:
+    name: Дописать сообщение в запись
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Опубликовать «Всё ещё чиним»
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          ISSUE_NUMBER: ${{ inputs.issue }}
+        run: node scripts/post-interim.mjs
