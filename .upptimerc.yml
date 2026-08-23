@@ -9,21 +9,30 @@ repo: status
 sites:
   - name: Рабочее место MRP
     url: https://mrp.zolotenkov.ru/
+    slug: mrp
+    icon: https://zolotenkov.ru/favicon.ico
     maxResponseTime: 3000
   - name: Серверная часть
     url: https://mrp.zolotenkov.ru/api/health
+    slug: api
+    icon: https://zolotenkov.ru/favicon.ico
     __dangerous__body_down_if_text_missing: '"status":"UP"'
     maxResponseTime: 2000
   - name: База данных
     url: https://mrp.zolotenkov.ru/api/health
     slug: database
+    icon: https://zolotenkov.ru/favicon.ico
     __dangerous__body_down_if_text_missing: '"database":"UP"'
     maxResponseTime: 2000
   - name: Сайт
     url: https://zolotenkov.ru/
+    slug: website
+    icon: https://zolotenkov.ru/favicon.ico
     maxResponseTime: 3000
   - name: Справка
     url: https://support.zolotenkov.ru/
+    slug: docs
+    icon: https://zolotenkov.ru/favicon.ico
     maxResponseTime: 3000
 
 status-website:
