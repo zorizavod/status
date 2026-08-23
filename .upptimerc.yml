@@ -10,29 +10,29 @@ sites:
   - name: Рабочее место MRP
     url: https://mrp.zolotenkov.ru/
     slug: mrp
-    icon: https://zolotenkov.ru/favicon.ico
+    icon: https://status.zolotenkov.ru/icon-mrp.svg
     maxResponseTime: 3000
   - name: Серверная часть
     url: https://mrp.zolotenkov.ru/api/health
     slug: api
-    icon: https://zolotenkov.ru/favicon.ico
+    icon: https://status.zolotenkov.ru/icon-api.svg
     __dangerous__body_down_if_text_missing: '"status":"UP"'
     maxResponseTime: 2000
   - name: База данных
     url: https://mrp.zolotenkov.ru/api/health
     slug: database
-    icon: https://zolotenkov.ru/favicon.ico
+    icon: https://status.zolotenkov.ru/icon-database.svg
     __dangerous__body_down_if_text_missing: '"database":"UP"'
     maxResponseTime: 2000
   - name: Сайт
     url: https://zolotenkov.ru/
     slug: website
-    icon: https://zolotenkov.ru/favicon.ico
+    icon: https://status.zolotenkov.ru/icon-website.svg
     maxResponseTime: 3000
   - name: Справка
     url: https://support.zolotenkov.ru/
     slug: docs
-    icon: https://zolotenkov.ru/favicon.ico
+    icon: https://status.zolotenkov.ru/icon-docs.svg
     maxResponseTime: 3000
 
 status-website:
@@ -50,12 +50,42 @@ status-website:
     всего, дело в вашей сети или у провайдера. Напишите нам на
     svetlana@zolotenkov.ru, разберёмся.
   css: |
+    /* ZOL-11727. Фоновая зелёная диагональ карточки — это картинка
+       response-time-*.png 600x400, обрезанная по ширине карточки: осей,
+       подписей и единиц на ней не видно, графиком она не читается. Убираем её
+       на всех ширинах; настоящий график со шкалами открывается по щелчку на
+       странице сервиса, где картинка показана целиком. */
+    .live-status article.graph {
+      background-image: none !important;
+    }
+
+    /* ZOL-11727. Эмодзи «галочка» перед строкой «Все сервисы работают» вшит в
+       разметку Upptime и настройкой не убирается. Прячем содержимое статьи
+       нулевым кеглем и рисуем ту же строку с иконкой circle-check из
+       lucide-react — той же, что во всём интерфейсе MRP. Смысл несёт не цвет,
+       а форма значка и сам текст (WCAG 1.4.1).
+       ВНИМАНИЕ: строка ниже обязана совпадать с i18n.allSystemsOperational. */
+    article.up:not(.graph) {
+      font-size: 0 !important;
+    }
+    article.up:not(.graph)::before {
+      content: "Все сервисы работают";
+      display: inline-flex;
+      align-items: center;
+      font-size: 1rem;
+      line-height: 1.5;
+      padding-left: 1.7rem;
+      background: url("/icon-check.svg") no-repeat left center;
+      background-size: 1.15rem 1.15rem;
+    }
+
     /* ZOL-11722. На телефоне содержимое шапки было втрое шире экрана: заголовок
-       обрезался, ссылки «Сайт» и «Справка» были недостижимы. А декоративная
-       зелёная диагональ карточки накрывала значения доступности и времени
-       ответа. Ниже 640 px шапка переносится, диагональ убирается.
+       обрезался, ссылки «Сайт» и «Справка» были недостижимы. Ниже 640 px шапка
+       переносится в две строки, а переключатель периода встаёт под неё.
        Правила идут с !important: они перекрывают собственные стили Svelte,
-       у которых специфичность выше за счёт хеш-класса компонента. */
+       у которых специфичность выше за счёт хеш-класса компонента.
+       Правило про фоновую диагональ отсюда переехало наверх, в ZOL-11727:
+       теперь она убрана на любой ширине. */
     @media (max-width: 640px) {
       nav {
         white-space: normal !important;
@@ -86,9 +116,6 @@ status-website:
       }
       nav ul a {
         padding: 0.6rem 1rem !important;
-      }
-      .live-status article.graph {
-        background-image: none !important;
       }
       .f {
         flex-wrap: wrap !important;
