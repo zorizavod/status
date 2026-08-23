@@ -130,6 +130,21 @@ test("в текстах нет внутренних имён, кодов и сл
   }
 });
 
+// Заголовок строится как «Не работает: {сервис}», поэтому двоеточие внутри самой
+// подстановки даёт в заголовке два двоеточия и скороговорку (ZOL-11734).
+test("в заголовке ровно одно двоеточие — подстановка своего не приносит", () => {
+  for (const slug of ["mrp", "api", "database", "website", "docs"]) {
+    for (const kind of ["down", "degraded"]) {
+      const title = incidentTitle(kind, slug);
+      assert.equal(
+        title.split(":").length - 1,
+        1,
+        `в заголовке больше одного двоеточия: ${title}`
+      );
+    }
+  }
+});
+
 test("первое сообщение помечается маркером opening и узнаётся", () => {
   const body = incidentBody("down", "mrp", started, "opening");
   assert.ok(isOpeningComment(body));
