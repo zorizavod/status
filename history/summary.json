@@ -2,7 +2,7 @@
   {
     "name": "Рабочее место MRP",
     "url": "https://mrp.zolotenkov.ru/",
-    "icon": "https://zolotenkov.ru/favicon.ico",
+    "icon": "https://status.zolotenkov.ru/icon-mrp.svg",
     "slug": "mrp",
     "status": "up",
     "uptime": "100.00%",
@@ -20,7 +20,7 @@
   {
     "name": "Серверная часть",
     "url": "https://mrp.zolotenkov.ru/api/health",
-    "icon": "https://zolotenkov.ru/favicon.ico",
+    "icon": "https://status.zolotenkov.ru/icon-api.svg",
     "slug": "api",
     "status": "up",
     "uptime": "100.00%",
@@ -38,7 +38,7 @@
   {
     "name": "База данных",
     "url": "https://mrp.zolotenkov.ru/api/health",
-    "icon": "https://zolotenkov.ru/favicon.ico",
+    "icon": "https://status.zolotenkov.ru/icon-database.svg",
     "slug": "database",
     "status": "up",
     "uptime": "100.00%",
@@ -56,7 +56,7 @@
   {
     "name": "Сайт",
     "url": "https://zolotenkov.ru/",
-    "icon": "https://zolotenkov.ru/favicon.ico",
+    "icon": "https://status.zolotenkov.ru/icon-website.svg",
     "slug": "website",
     "status": "up",
     "uptime": "100.00%",
@@ -74,7 +74,7 @@
   {
     "name": "Справка",
     "url": "https://support.zolotenkov.ru/",
-    "icon": "https://zolotenkov.ru/favicon.ico",
+    "icon": "https://status.zolotenkov.ru/icon-docs.svg",
     "slug": "docs",
     "status": "up",
     "uptime": "100.00%",
