@@ -6,6 +6,20 @@
 owner: zorizavod
 repo: status
 
+# Частота рабочих процессов. Ключ штатный для Upptime (helpers/workflows.ts):
+# при пересборке файлов .github/workflows значения берутся отсюда, поэтому
+# правку расписания надо держать в обоих местах — здесь и в самом workflow.
+#
+# ZOL-11682. `responseTime` по умолчанию — «0 23 * * *», раз в сутки. Это не
+# частота проверок (её задаёт `uptime`), а частота ПРИНУДИТЕЛЬНОЙ записи замера
+# в историю: обычный прогон `uptime` коммитит только смену состояния
+# («Skipping commit, status is up»), а график времени ответа на странице сервиса
+# строится ровно по коммитам history/<slug>.yml (последние 28 штук). При суточной
+# записи график вырождался в прямую между двумя точками и выглядел так, будто мы
+# опрашиваем сервис раз в сутки. Раз в час — 28 точек примерно за сутки.
+workflowSchedule:
+  responseTime: "0 * * * *"
+
 sites:
   - name: Рабочее место MRP
     url: https://mrp.zolotenkov.ru/
@@ -138,6 +152,49 @@ status-website:
     section article p.zol-p {
       margin: 0 0 0.85rem;
     }
+
+    /* ZOL-11682. Полоса доступности по дням внутри карточки сервиса — то, чего
+       у шаблона Upptime нет и что борд просила с самого начала (status.claude.com).
+       Разметку рисует наш же скрипт из ключа js ниже, здесь только вид.
+       Цвета заданы числами намеренно: переменных нашей дизайн-системы на чужой
+       странице нет, а `currentColor` тут ничего не наследует. */
+    .zol-days {
+      margin-top: 0.9rem;
+    }
+    .zol-days-bars {
+      display: flex;
+      gap: 2px;
+      height: 34px;
+      align-items: stretch;
+    }
+    .zol-days-bars i {
+      display: block;
+      flex: 1 1 0;
+      min-width: 2px;
+      border-radius: 2px;
+      background: #cbd5e1;
+    }
+    .zol-days-bars i.zol-up {
+      background: #16a34a;
+    }
+    .zol-days-bars i.zol-down {
+      background: #dc2626;
+    }
+    .zol-days-legend {
+      display: flex;
+      justify-content: space-between;
+      gap: 0.5rem;
+      margin-top: 0.35rem;
+      font-size: 0.8rem;
+      opacity: 0.7;
+    }
+    /* На узком экране 30 полосок по 2 px с зазором ещё читаются (390 px даёт
+       по ~11 px на день), а вот подписи по краям начинают слипаться. */
+    @media (max-width: 380px) {
+      .zol-days-legend {
+        font-size: 0.72rem;
+      }
+    }
   js: |
     /* ZOL-11845. Две шероховатости вёрстки страницы аварий, которые видит
        покупатель. Обе рисует шаблон @upptime/status-page, ключами i18n и
@@ -231,6 +288,126 @@ status-website:
         });
       }
 
+
+      /* ZOL-11682. Полоса доступности по дням. Борд сравнила нашу страницу со
+         status.claude.com: там у каждого сервиса стоит столбик на день за
+         последние 30 дней, и по нему сразу видно, часто ли мы падаем. У шаблона
+         @upptime/status-page такого компонента нет, но данные для него Upptime
+         уже считает сам: в history/summary.json у каждого сервиса лежит
+         `dailyMinutesDown` — сколько минут в этот день сервис был недоступен,
+         посчитано по записям об авариях (calculate-uptime.ts, глубина 365 дней).
+
+         Границы суток в этих ключах — по UTC: их формирует dayjs на рабочем узле
+         Actions, а он живёт в UTC. Расхождение с московскими сутками — до трёх
+         часов, для полосы «день целиком» это несущественно, но помнить стоит.
+
+         Дни до начала наблюдений закрашивать зелёным нельзя: это не «работало»,
+         а «мы ещё не смотрели». Дату начала Upptime в summary.json не отдаёт
+         (она лежит полем startTime в history/<slug>.yml), поэтому она задана
+         здесь числом — все пять проверок завелись в один день. */
+      var WATCH_SINCE = "2026-08-23";
+      var DAYS = 30;
+      var SUMMARY_URL =
+        "https://raw.githubusercontent.com/zorizavod/status/master/history/summary.json";
+
+      var summary = null;
+      var summaryAsked = false;
+
+      function askSummary() {
+        if (summaryAsked || typeof fetch !== "function") return;
+        summaryAsked = true;
+        fetch(SUMMARY_URL)
+          .then(function (r) { return r.ok ? r.json() : null; })
+          .then(function (data) {
+            if (!data || !data.length) return;
+            summary = data;
+            schedule();
+          })
+          .catch(function () { /* полосы просто не будет, страница цела */ });
+      }
+
+      function dayKey(at) {
+        return at.toISOString().slice(0, 10);
+      }
+
+      function dayLabel(key) {
+        var parts = key.split("-");
+        return parseInt(parts[2], 10) + " " + MONTHS[parseInt(parts[1], 10) - 1];
+      }
+
+      function minutesWord(n) {
+        var ten = n % 100;
+        var one = n % 10;
+        if (ten > 10 && ten < 20) return n + " минут";
+        if (one === 1) return n + " минуту";
+        if (one > 1 && one < 5) return n + " минуты";
+        return n + " минут";
+      }
+
+      function dayBars(root) {
+        var cards = root.querySelectorAll("section.live-status article");
+        if (!cards.length) return;
+        if (!summary) return askSummary();
+
+        var today = new Date();
+        Array.prototype.forEach.call(cards, function (card) {
+          if (card.getElementsByClassName("zol-days").length) return;
+          var link = card.querySelector('a[href*="/history/"]');
+          if (!link) return;
+          var slug = link.getAttribute("href").split("/history/")[1];
+          if (!slug) return;
+          var site = null;
+          summary.forEach(function (s) { if (s.slug === slug) site = s; });
+          if (!site) return;
+
+          var down = site.dailyMinutesDown || {};
+          var bars = document.createElement("div");
+          bars.className = "zol-days-bars";
+          var outages = 0;
+          for (var i = DAYS - 1; i >= 0; i--) {
+            var at = new Date(today.getTime() - i * 86400000);
+            var key = dayKey(at);
+            var bar = document.createElement("i");
+            var minutes = Math.round(down[key] || 0);
+            if (key < WATCH_SINCE) {
+              bar.title = dayLabel(key) + " — тогда мы ещё не следили";
+            } else if (minutes > 0) {
+              bar.className = "zol-down";
+              bar.title = dayLabel(key) + " — не работал " + minutesWord(minutes);
+              outages++;
+            } else {
+              bar.className = "zol-up";
+              bar.title = dayLabel(key) + " — работал без сбоев";
+            }
+            bars.appendChild(bar);
+          }
+
+          var legend = document.createElement("div");
+          legend.className = "zol-days-legend";
+          var left = document.createElement("span");
+          left.textContent = "30 дней назад";
+          var right = document.createElement("span");
+          right.textContent = "сегодня";
+          legend.appendChild(left);
+          legend.appendChild(right);
+
+          var box = document.createElement("div");
+          box.className = "zol-days";
+          /* Цветом смысл не передаём: та же мысль есть словами в подписи под
+             полосой и в подсказке у каждого дня. */
+          box.setAttribute("role", "img");
+          box.setAttribute(
+            "aria-label",
+            outages
+              ? "Доступность по дням за 30 дней: дней со сбоями — " + outages
+              : "Доступность по дням за 30 дней: сбоев не было"
+          );
+          box.appendChild(bars);
+          box.appendChild(legend);
+          card.appendChild(box);
+        });
+      }
+
       var queued = false;
       function pass() {
         queued = false;
@@ -238,6 +415,7 @@ status-website:
         if (!root) return;
         try { retime(root); } catch (e) {}
         try { paragraphs(root); } catch (e) {}
+        try { dayBars(root); } catch (e) {}
       }
       function schedule() {
         if (queued) return;
@@ -288,7 +466,7 @@ i18n:
   overallUptimeTitle: Доступность за всё время
   averageResponseTime: "Среднее время ответа: $TIME мс"
   averageResponseTimeTitle: Среднее время ответа
-  sevelDayResponseTime: Время ответа за 7 дней
+  sevelDayResponseTime: Время ответа в последние часы
   responseTimeMs: Время ответа, мс
   up: Работает
   down: Не работает
