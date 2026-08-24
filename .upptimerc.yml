@@ -364,6 +364,7 @@ status-website:
           var bars = document.createElement("div");
           bars.className = "zol-days-bars";
           var outages = 0;
+          var unknown = 0;
           for (var i = DAYS - 1; i >= 0; i--) {
             var at = new Date(today.getTime() - i * 86400000);
             var key = dayKey(at);
@@ -371,6 +372,7 @@ status-website:
             var minutes = Math.round(down[key] || 0);
             if (key < WATCH_SINCE) {
               bar.title = dayLabel(key) + " — тогда мы ещё не следили";
+              unknown++;
             } else if (minutes > 0) {
               bar.className = "zol-down";
               bar.title = dayLabel(key) + " — не работал " + minutesWord(minutes);
@@ -385,7 +387,12 @@ status-website:
           var legend = document.createElement("div");
           legend.className = "zol-days-legend";
           var left = document.createElement("span");
-          left.textContent = "30 дней назад";
+          /* Пока часть полосы серая, подпись слева объясняет именно серое: на
+             телефоне подсказки по наведению нет, и без этой строки покупатель
+             видит длинную серую полосу без единого слова о том, что она значит. */
+          left.textContent = unknown
+            ? "следим с " + dayLabel(WATCH_SINCE)
+            : "30 дней назад";
           var right = document.createElement("span");
           right.textContent = "сегодня";
           legend.appendChild(left);
@@ -400,6 +407,8 @@ status-website:
             "aria-label",
             outages
               ? "Доступность по дням за 30 дней: дней со сбоями — " + outages
+              : unknown
+              ? "Доступность по дням: следим с " + dayLabel(WATCH_SINCE) + ", сбоев не было"
               : "Доступность по дням за 30 дней: сбоев не было"
           );
           box.appendChild(bars);
