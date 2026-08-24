@@ -129,6 +129,134 @@ status-website:
         margin-right: 1.1rem !important;
       }
     }
+
+    /* ZOL-11845. Абзацы сообщения об аварии. Отступ задаётся здесь, а не в
+       теме: разбивку на абзацы делает наш скрипт ниже (ключ `js`), и класс
+       `zol-p` есть только у сделанных им абзацев. Нижний отступ оставлен и у
+       последнего абзаца — под ним идёт строка с датой и автором. */
+    section article p.zol-p {
+      margin: 0 0 0.85rem;
+    }
+  js: |
+    /* ZOL-11845. Две шероховатости вёрстки страницы аварий, которые видит
+       покупатель. Обе рисует шаблон @upptime/status-page, ключами i18n и
+       настройками они не меняются:
+
+       1. Дату Upptime печатает как `new Date(...).toLocaleString(i18n.locale)` —
+          «24.08.2026, 17:39:52»: с секундами и в часовом поясе браузера, без
+          подписи пояса. §8 документа docs/ops/status-page-incident-copy-zol-11731.md
+          требует обратного: без секунд и всегда с явным поясом.
+       2. Сообщение шаблон прогоняет через snarkdown, а тот схлопывает пустую
+          строку в один <br />: четыре абзаца показываются четырьмя строками
+          подряд, без просвета. Различить абзац и перенос внутри абзаца в готовой
+          разметке нельзя, поэтому чиним на уровне DOM: наши сообщения собираются
+          в scripts/incident-copy.mjs через join("\n\n"), одиночных переводов
+          строки внутри абзаца в них нет — значит каждый <br /> и есть граница
+          абзаца.
+
+       Точка встраивания — ключ status-website.js, штатный для Upptime (рядом с
+       уже используемым css). Страница — SPA на Sapper: данные аварии приходят
+       после отрисовки, поэтому один проход не годится, нужен MutationObserver.
+       Проходы идемпотентны: свой же результат ни один из них не переделывает. */
+    (function () {
+      "use strict";
+      if (typeof window === "undefined" || typeof document === "undefined") return;
+
+      var MONTHS = ["января","февраля","марта","апреля","мая","июня","июля",
+                    "августа","сентября","октября","ноября","декабря"];
+
+      /* Так и только так выглядит toLocaleString для локали ru-RU, заданной в
+         i18n.locale: от языка браузера она не зависит, шаблон детерминирован.
+         В наших текстах такой формы нет — там уже «24 августа, 17:39 (МСК)». */
+      var STAMP = /(\d{2})\.(\d{2})\.(\d{4}),\s(\d{2}):(\d{2}):(\d{2})/g;
+
+      var msk = null;
+      try {
+        msk = new Intl.DateTimeFormat("ru-RU", {
+          timeZone: "Europe/Moscow", year: "numeric", month: "numeric",
+          day: "numeric", hour: "2-digit", minute: "2-digit", hourCycle: "h23"
+        });
+      } catch (e) { msk = null; }
+
+      function toMoscow(match, d, m, y, hh, mm, ss) {
+        if (!msk) return match;
+        /* Дата нарисована в поясе браузера. Разбираем её конструктором локального
+           времени — получается ровно тот же момент, — и рисуем заново в МСК. */
+        var at = new Date(+y, +m - 1, +d, +hh, +mm, +ss);
+        if (isNaN(at.getTime())) return match;
+        var p = {};
+        msk.formatToParts(at).forEach(function (part) { p[part.type] = part.value; });
+        var month = MONTHS[+p.month - 1];
+        if (!month || !p.day || !p.year || !p.hour || !p.minute) return match;
+        /* Год оставляем, в отличие от §8: там подстановка всегда про текущую
+           аварию, а здесь та же строка подписывает и запись из архива. */
+        return p.day + " " + month + " " + p.year + ", " + p.hour + ":" + p.minute + " (МСК)";
+      }
+
+      function retime(root) {
+        var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null, false);
+        var found = [], node;
+        while ((node = walker.nextNode())) {
+          STAMP.lastIndex = 0;
+          if (node.nodeValue && STAMP.test(node.nodeValue)) found.push(node);
+        }
+        found.forEach(function (n) {
+          STAMP.lastIndex = 0;
+          n.nodeValue = n.nodeValue.replace(STAMP, toMoscow);
+        });
+      }
+
+      function paragraphs(root) {
+        var list = root.querySelectorAll("section article p");
+        Array.prototype.forEach.call(list, function (p) {
+          if (p.className.indexOf("zol-p") !== -1) return;
+          if (!p.getElementsByTagName("br").length) return;
+          var groups = [[]];
+          Array.prototype.slice.call(p.childNodes).forEach(function (n) {
+            if (n.nodeType === 1 && n.tagName === "BR") groups.push([]);
+            else groups[groups.length - 1].push(n);
+          });
+          var frag = document.createDocumentFragment();
+          groups.forEach(function (group) {
+            var text = group.map(function (n) { return n.textContent || ""; }).join("");
+            if (!text.trim()) return;
+            var box = document.createElement("p");
+            box.className = "zol-p";
+            group.forEach(function (n) { box.appendChild(n); });
+            frag.appendChild(box);
+          });
+          if (!frag.childNodes.length) return;
+          p.parentNode.replaceChild(frag, p);
+        });
+      }
+
+      var queued = false;
+      function pass() {
+        queued = false;
+        var root = document.getElementById("sapper") || document.body;
+        if (!root) return;
+        try { retime(root); } catch (e) {}
+        try { paragraphs(root); } catch (e) {}
+      }
+      function schedule() {
+        if (queued) return;
+        queued = true;
+        window.setTimeout(pass, 0);
+      }
+      function start() {
+        pass();
+        try {
+          new MutationObserver(schedule).observe(document.body, {
+            childList: true, subtree: true, characterData: true
+          });
+        } catch (e) {}
+      }
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", start);
+      } else {
+        start();
+      }
+    })();
   navbar:
     - title: Доступность
       href: /
