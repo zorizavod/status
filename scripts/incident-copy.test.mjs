@@ -41,13 +41,13 @@ test("длительность: минуты, часы, часы с минута
 });
 
 test("заголовки берут формулировку по slug, а не имя проверки", () => {
-  assert.equal(incidentTitle("down", "api"), "Не работает: рабочее место MRP открывается, но не показывает и не сохраняет данные");
+  assert.equal(incidentTitle("down", "api"), "Не работает: рабочее место МРП открывается, но не показывает и не сохраняет данные");
   assert.equal(incidentTitle("degraded", "docs"), "Работает медленно: справка `support.zolotenkov.ru` открывается дольше обычного");
 });
 
 test("тело записи начинается со времени и содержит маркер", () => {
   const body = incidentBody("down", "mrp", started);
-  assert.match(body, /^С 23 августа, 14:35 \(МСК\) рабочее место MRP не открывается\./);
+  assert.match(body, /^С 23 августа, 14:35 \(МСК\) рабочее место МРП не открывается\./);
   assert.ok(hasMarker(body));
   assert.match(body, /svetlana@zolotenkov\.ru/);
 });
@@ -69,7 +69,7 @@ test("восстановление после падения", () => {
   const kind = detectKind({ labels: ["status", "mrp", KIND_LABELS.down], title: incidentTitle("down", "mrp") });
   assert.equal(kind, "down");
   const text = resolvedComment(kind, "mrp", started, recovered);
-  assert.match(text, /^Работает\. С 15:12 \(МСК\) рабочее место MRP снова открывается\. Сбой длился 37 минут\./);
+  assert.match(text, /^Работает\. С 15:12 \(МСК\) рабочее место МРП снова открывается\. Сбой длился 37 минут\./);
   assert.match(text, /Это последнее сообщение по этой аварии\./);
 });
 
@@ -80,10 +80,10 @@ test("разновидность восстанавливается из тел�
 
 test("разновидность берётся из английского заголовка Upptime до переписывания", () => {
   assert.equal(
-    detectKind({ labels: ["status", "mrp"], title: "⚠️ Рабочее место MRP has degraded performance" }),
+    detectKind({ labels: ["status", "mrp"], title: "⚠️ Рабочее место МРП has degraded performance" }),
     "degraded"
   );
-  assert.equal(detectKind({ labels: ["status", "mrp"], title: "🛑 Рабочее место MRP is down" }), "down");
+  assert.equal(detectKind({ labels: ["status", "mrp"], title: "🛑 Рабочее место МРП is down" }), "down");
 });
 
 test("slug вычисляется из меток, служебные метки пропускаются", () => {
@@ -97,7 +97,7 @@ test("сообщение Upptime о восстановлении узнаётс�
 
 test("промежуточное сообщение", () => {
   const text = interimComment("down", "database", started);
-  assert.match(text, /^Всё ещё чиним\. С 23 августа, 14:35 \(МСК\) рабочее место MRP не сохраняет и не показывает данные; работаем над восстановлением\./);
+  assert.match(text, /^Всё ещё чиним\. С 23 августа, 14:35 \(МСК\) рабочее место МРП не сохраняет и не показывает данные; работаем над восстановлением\./);
 });
 
 // Красные линии из постановки: ничего внутреннего на публичной странице.
