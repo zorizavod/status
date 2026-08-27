@@ -121,6 +121,9 @@ test("в текстах нет внутренних имён, кодов и сл
       "/api/health",
       "Dokploy",
       "degraded",
+      // ZOL-12232. Название продукта для читателя — «МРП». Латинское «MRP»
+      // на публичной странице читается как чужой термин.
+      "MRP",
     ]) {
       assert.ok(
         !visible.toLowerCase().includes(forbidden.toLowerCase()),
