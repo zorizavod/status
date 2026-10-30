@@ -113,13 +113,13 @@ export function CheckRow({
 		<li className="px-4 py-5 sm:px-5" data-check={check.slug}>
 			<div className="flex items-start justify-between gap-4">
 				<h3
-					className="text-comfort font-semibold leading-snug"
+					className="min-w-0 flex-1 text-comfort font-semibold leading-snug"
 					style={{ color: INK }}
 				>
 					{check.name}
 				</h3>
 				<span
-					className="flex shrink-0 items-center gap-2 text-sm font-semibold"
+					className="flex max-w-[55%] shrink-0 items-center gap-2 text-sm font-semibold"
 					style={{ color: status === "up" ? "#0A7269" : INK }}
 				>
 					<span
