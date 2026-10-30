@@ -118,10 +118,19 @@ test("phone 360 and 390: no horizontal scroll, touch and keyboard tooltip within
 		await page.goto("/?period=day");
 		await expect(page.getByText("Все работает", { exact: true })).toBeVisible();
 		expect(
-			await page.evaluate(
-				() => document.documentElement.scrollWidth <= window.innerWidth,
+			await page.evaluate(() =>
+				Array.from(document.querySelectorAll("body *"))
+					.filter(
+						(element) =>
+							element.getBoundingClientRect().right > window.innerWidth,
+					)
+					.map((element) => ({
+						tag: element.tagName,
+						className: element.className,
+						right: element.getBoundingClientRect().right,
+					})),
 			),
-		).toBe(true);
+		).toEqual([]);
 		const lastSlot = page.locator('[data-check="mrp"] fieldset button').last();
 		await lastSlot.click();
 		const hint = page.getByRole("tooltip");
