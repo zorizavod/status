@@ -49,6 +49,17 @@ sites:
     icon: https://status.zolotenkov.ru/icon-docs.svg
     maxResponseTime: 3000
 
+  - name: Портал разработчика
+    url: https://developer.zolotenkov.ru/
+    slug: developer
+    maxResponseTime: 3000
+  - name: Подключение других программ и ИИ-агентов
+    url: https://mrp.zolotenkov.ru/api/external/v1/mcp
+    slug: external-api
+    expectedStatusCodes:
+      - 401
+    maxResponseTime: 2000
+
 status-website:
   cname: status.zolotenkov.ru
   name: Доступность сервисов Zolotenkov

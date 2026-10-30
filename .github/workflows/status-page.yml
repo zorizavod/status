@@ -1,0 +1,49 @@
+# ZOL-17982. Own public site; stock Upptime workflows continue monitoring only.
+name: Страница статуса
+on:
+  push:
+    branches: [master]
+    paths: ['status-page/**', '.github/workflows/status-page.yml']
+  workflow_run:
+    workflows: ['Uptime CI', 'Response Time CI', 'Setup CI', 'Summary CI']
+    types: [completed]
+  workflow_dispatch:
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: status-page-deployment
+  cancel-in-progress: false
+jobs:
+  publish:
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    defaults:
+      run:
+        working-directory: status-page
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: master
+          fetch-depth: 0
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: status-page/package-lock.json
+      - run: npm ci --no-audit --no-fund
+      - run: npm run check
+      - run: npm test
+      - run: npm run build
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:e2e
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: status-page/dist
+      - uses: actions/deploy-pages@v4
+        id: deployment

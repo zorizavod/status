@@ -1,0 +1,9 @@
+@import "tailwindcss";
+@theme {
+	--text-compact: 13px;
+	--text-comfort: 15px;
+}
+:root {
+	--status-red: #ff4d4f;
+	--status-yellow: #f59e0b;
+}
