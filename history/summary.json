@@ -5,17 +5,19 @@
     "icon": "https://status.zolotenkov.ru/icon-mrp.svg",
     "slug": "mrp",
     "status": "up",
-    "uptime": "100.00%",
-    "uptimeDay": "100.00%",
-    "uptimeWeek": "100.00%",
-    "uptimeMonth": "100.00%",
-    "uptimeYear": "100.00%",
+    "uptime": "99.89%",
+    "uptimeDay": "90.25%",
+    "uptimeWeek": "98.61%",
+    "uptimeMonth": "99.68%",
+    "uptimeYear": "99.89%",
     "time": 807,
-    "timeDay": 750,
-    "timeWeek": 873,
-    "timeMonth": 831,
+    "timeDay": 762,
+    "timeWeek": 876,
+    "timeMonth": 832,
     "timeYear": 807,
-    "dailyMinutesDown": {}
+    "dailyMinutesDown": {
+      "2026-11-23": 140
+    }
   },
   {
     "name": "Серверная часть",
@@ -23,17 +25,19 @@
     "icon": "https://status.zolotenkov.ru/icon-api.svg",
     "slug": "api",
     "status": "up",
-    "uptime": "100.00%",
-    "uptimeDay": "100.00%",
-    "uptimeWeek": "100.00%",
-    "uptimeMonth": "100.00%",
-    "uptimeYear": "100.00%",
+    "uptime": "99.90%",
+    "uptimeDay": "90.59%",
+    "uptimeWeek": "98.66%",
+    "uptimeMonth": "99.69%",
+    "uptimeYear": "99.90%",
     "time": 736,
-    "timeDay": 678,
-    "timeWeek": 685,
+    "timeDay": 694,
+    "timeWeek": 688,
     "timeMonth": 754,
     "timeYear": 736,
-    "dailyMinutesDown": {}
+    "dailyMinutesDown": {
+      "2026-11-23": 136
+    }
   },
   {
     "name": "База данных",
@@ -41,17 +45,19 @@
     "icon": "https://status.zolotenkov.ru/icon-database.svg",
     "slug": "database",
     "status": "up",
-    "uptime": "100.00%",
-    "uptimeDay": "100.00%",
-    "uptimeWeek": "100.00%",
-    "uptimeMonth": "100.00%",
-    "uptimeYear": "100.00%",
+    "uptime": "99.90%",
+    "uptimeDay": "90.92%",
+    "uptimeWeek": "98.70%",
+    "uptimeMonth": "99.70%",
+    "uptimeYear": "99.90%",
     "time": 723,
-    "timeDay": 787,
-    "timeWeek": 679,
-    "timeMonth": 737,
+    "timeDay": 808,
+    "timeWeek": 687,
+    "timeMonth": 740,
     "timeYear": 723,
-    "dailyMinutesDown": {}
+    "dailyMinutesDown": {
+      "2026-11-23": 131
+    }
   },
   {
     "name": "Сайт",
@@ -59,17 +65,19 @@
     "icon": "https://status.zolotenkov.ru/icon-website.svg",
     "slug": "website",
     "status": "up",
-    "uptime": "100.00%",
-    "uptimeDay": "100.00%",
-    "uptimeWeek": "100.00%",
-    "uptimeMonth": "100.00%",
-    "uptimeYear": "100.00%",
+    "uptime": "99.91%",
+    "uptimeDay": "91.26%",
+    "uptimeWeek": "98.75%",
+    "uptimeMonth": "99.71%",
+    "uptimeYear": "99.91%",
     "time": 1422,
-    "timeDay": 1344,
-    "timeWeek": 1480,
-    "timeMonth": 1451,
+    "timeDay": 1413,
+    "timeWeek": 1495,
+    "timeMonth": 1454,
     "timeYear": 1422,
-    "dailyMinutesDown": {}
+    "dailyMinutesDown": {
+      "2026-11-23": 126
+    }
   },
   {
     "name": "Справка",
@@ -77,17 +85,19 @@
     "icon": "https://status.zolotenkov.ru/icon-docs.svg",
     "slug": "docs",
     "status": "up",
-    "uptime": "100.00%",
-    "uptimeDay": "100.00%",
-    "uptimeWeek": "100.00%",
-    "uptimeMonth": "100.00%",
-    "uptimeYear": "100.00%",
-    "time": 942,
-    "timeDay": 884,
-    "timeWeek": 944,
-    "timeMonth": 946,
-    "timeYear": 942,
-    "dailyMinutesDown": {}
+    "uptime": "99.91%",
+    "uptimeDay": "91.59%",
+    "uptimeWeek": "98.80%",
+    "uptimeMonth": "99.72%",
+    "uptimeYear": "99.91%",
+    "time": 943,
+    "timeDay": 937,
+    "timeWeek": 954,
+    "timeMonth": 948,
+    "timeYear": 943,
+    "dailyMinutesDown": {
+      "2026-11-23": 121
+    }
   },
   {
     "name": "Портал разработчика",
@@ -95,17 +105,19 @@
     "icon": "https://icons.duckduckgo.com/ip3/developer.zolotenkov.ru.ico",
     "slug": "developer",
     "status": "up",
-    "uptime": "100.00%",
-    "uptimeDay": "100.00%",
-    "uptimeWeek": "100.00%",
-    "uptimeMonth": "100.00%",
-    "uptimeYear": "100.00%",
-    "time": 970,
-    "timeDay": 943,
-    "timeWeek": 1000,
-    "timeMonth": 970,
-    "timeYear": 970,
-    "dailyMinutesDown": {}
+    "uptime": "99.66%",
+    "uptimeDay": "91.92%",
+    "uptimeWeek": "98.85%",
+    "uptimeMonth": "99.66%",
+    "uptimeYear": "99.66%",
+    "time": 971,
+    "timeDay": 1013,
+    "timeWeek": 1012,
+    "timeMonth": 971,
+    "timeYear": 971,
+    "dailyMinutesDown": {
+      "2026-11-23": 116
+    }
   },
   {
     "name": "Подключение других программ и ИИ-агентов",
@@ -113,16 +125,18 @@
     "icon": "https://icons.duckduckgo.com/ip3/mrp.zolotenkov.ru.ico",
     "slug": "external-api",
     "status": "up",
-    "uptime": "100.00%",
-    "uptimeDay": "100.00%",
-    "uptimeWeek": "100.00%",
-    "uptimeMonth": "100.00%",
-    "uptimeYear": "100.00%",
+    "uptime": "99.67%",
+    "uptimeDay": "92.26%",
+    "uptimeWeek": "98.89%",
+    "uptimeMonth": "99.67%",
+    "uptimeYear": "99.67%",
     "time": 699,
-    "timeDay": 602,
-    "timeWeek": 650,
+    "timeDay": 693,
+    "timeWeek": 656,
     "timeMonth": 699,
     "timeYear": 699,
-    "dailyMinutesDown": {}
+    "dailyMinutesDown": {
+      "2026-11-23": 111
+    }
   }
 ]
