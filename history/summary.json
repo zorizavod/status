@@ -10,11 +10,11 @@
     "uptimeWeek": "98.61%",
     "uptimeMonth": "99.68%",
     "uptimeYear": "99.90%",
-    "time": 807,
-    "timeDay": 873,
-    "timeWeek": 834,
-    "timeMonth": 828,
-    "timeYear": 807,
+    "time": 808,
+    "timeDay": 895,
+    "timeWeek": 829,
+    "timeMonth": 830,
+    "timeYear": 808,
     "dailyMinutesDown": {
       "2026-11-23": 140
     }
@@ -31,9 +31,9 @@
     "uptimeMonth": "99.69%",
     "uptimeYear": "99.90%",
     "time": 737,
-    "timeDay": 849,
-    "timeWeek": 721,
-    "timeMonth": 758,
+    "timeDay": 854,
+    "timeWeek": 755,
+    "timeMonth": 751,
     "timeYear": 737,
     "dailyMinutesDown": {
       "2026-11-23": 136
@@ -50,11 +50,11 @@
     "uptimeWeek": "98.70%",
     "uptimeMonth": "99.70%",
     "uptimeYear": "99.90%",
-    "time": 724,
-    "timeDay": 870,
-    "timeWeek": 700,
-    "timeMonth": 739,
-    "timeYear": 724,
+    "time": 725,
+    "timeDay": 834,
+    "timeWeek": 735,
+    "timeMonth": 737,
+    "timeYear": 725,
     "dailyMinutesDown": {
       "2026-11-23": 131
     }
@@ -71,9 +71,9 @@
     "uptimeMonth": "99.71%",
     "uptimeYear": "99.91%",
     "time": 1423,
-    "timeDay": 1539,
-    "timeWeek": 1473,
-    "timeMonth": 1468,
+    "timeDay": 1506,
+    "timeWeek": 1482,
+    "timeMonth": 1469,
     "timeYear": 1423,
     "dailyMinutesDown": {
       "2026-11-23": 126
@@ -90,11 +90,11 @@
     "uptimeWeek": "98.80%",
     "uptimeMonth": "99.72%",
     "uptimeYear": "99.91%",
-    "time": 943,
-    "timeDay": 996,
-    "timeWeek": 948,
-    "timeMonth": 950,
-    "timeYear": 943,
+    "time": 944,
+    "timeDay": 1067,
+    "timeWeek": 977,
+    "timeMonth": 949,
+    "timeYear": 944,
     "dailyMinutesDown": {
       "2026-11-23": 121
     }
@@ -105,16 +105,16 @@
     "icon": "https://icons.duckduckgo.com/ip3/developer.zolotenkov.ru.ico",
     "slug": "developer",
     "status": "up",
-    "uptime": "99.68%",
+    "uptime": "99.69%",
     "uptimeDay": "100.00%",
     "uptimeWeek": "98.85%",
-    "uptimeMonth": "99.68%",
-    "uptimeYear": "99.68%",
-    "time": 974,
-    "timeDay": 1033,
-    "timeWeek": 981,
-    "timeMonth": 974,
-    "timeYear": 974,
+    "uptimeMonth": "99.69%",
+    "uptimeYear": "99.69%",
+    "time": 976,
+    "timeDay": 1038,
+    "timeWeek": 1006,
+    "timeMonth": 976,
+    "timeYear": 976,
     "dailyMinutesDown": {
       "2026-11-23": 116
     }
@@ -125,16 +125,16 @@
     "icon": "https://icons.duckduckgo.com/ip3/mrp.zolotenkov.ru.ico",
     "slug": "external-api",
     "status": "up",
-    "uptime": "99.69%",
+    "uptime": "99.71%",
     "uptimeDay": "100.00%",
     "uptimeWeek": "98.89%",
-    "uptimeMonth": "99.69%",
-    "uptimeYear": "99.69%",
-    "time": 700,
-    "timeDay": 704,
-    "timeWeek": 641,
-    "timeMonth": 700,
-    "timeYear": 700,
+    "uptimeMonth": "99.71%",
+    "uptimeYear": "99.71%",
+    "time": 704,
+    "timeDay": 840,
+    "timeWeek": 684,
+    "timeMonth": 704,
+    "timeYear": 704,
     "dailyMinutesDown": {
       "2026-11-23": 111
     }
