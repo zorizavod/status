@@ -34,7 +34,11 @@ jobs:
         with:
           ref: ${{ github.head_ref || github.ref_name }}
           token: ${{ secrets.GH_PAT || github.token }}
+      - name: Preflight runner connectivity (ZOL-19403)
+        id: preflight
+        run: node scripts/runner-preflight.mjs
       - name: Update response time
+        if: steps.preflight.outputs.skip_upptime != 'true'
         uses: upptime/uptime-monitor@v1.43.15
         with:
           command: "response-time"

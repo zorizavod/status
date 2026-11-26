@@ -11,6 +11,7 @@ import {
   incidentBody,
   incidentTitle,
   interimComment,
+  isKnownSlug,
   isOpeningComment,
   isResolvedComment,
   KIND_LABELS,
@@ -103,7 +104,8 @@ test("промежуточное сообщение", () => {
 // Красные линии из постановки: ничего внутреннего на публичной странице.
 test("в текстах нет внутренних имён, кодов и слова «инцидент»", () => {
   const texts = [];
-  for (const slug of ["mrp", "api", "database", "website", "docs"]) {
+  for (const slug of ["mrp", "api", "database", "website", "docs", "developer", "external-api"]) {
+    assert.ok(isKnownSlug(slug), `slug «${slug}» должен быть описан в SERVICE_PHRASES`);
     for (const kind of ["down", "degraded"]) {
       texts.push(incidentTitle(kind, slug), incidentBody(kind, slug, started));
       texts.push(interimComment(kind, slug, started), resolvedComment(kind, slug, started, recovered));
@@ -136,7 +138,7 @@ test("в текстах нет внутренних имён, кодов и сл
 // Заголовок строится как «Не работает: {сервис}», поэтому двоеточие внутри самой
 // подстановки даёт в заголовке два двоеточия и скороговорку (ZOL-11734).
 test("в заголовке ровно одно двоеточие — подстановка своего не приносит", () => {
-  for (const slug of ["mrp", "api", "database", "website", "docs"]) {
+  for (const slug of ["mrp", "api", "database", "website", "docs", "developer", "external-api"]) {
     for (const kind of ["down", "degraded"]) {
       const title = incidentTitle(kind, slug);
       assert.equal(
